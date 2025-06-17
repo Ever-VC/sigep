@@ -184,8 +184,27 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('usuarios');
-        Schema::dropIfExists('password_reset_tokens');
+        /**
+         * ELIMINACIÓN DE TABLAS
+         * Esta migración elimina las tablas creadas en la migración 'up'.
+         */
+        Schema::dropIfExists('formulas');
+        Schema::dropIfExists('planilla_obligacion_tributaria');
+        Schema::dropIfExists('obligaciones_tributarias');
+        Schema::dropIfExists('planillas');
+        Schema::dropIfExists('anticipos');
+        Schema::dropIfExists('descuentos_por_perdidas');
+        Schema::dropIfExists('bonos');
+        Schema::dropIfExists('horas_extras');
+        Schema::dropIfExists('asistencias');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('usuarios');
+        Schema::dropIfExists('empleados');
+        Schema::dropIfExists('turnos');
+        Schema::dropIfExists('tipo_contratos');
+        Schema::dropIfExists('sucursales');
+        // FALTA: Eliminar tablas de roles y permisos si se crean
+        // Nota: Asegurarse de eliminar las tablas en el orden correcto para evitar errores de clave foránea
     }
 };
