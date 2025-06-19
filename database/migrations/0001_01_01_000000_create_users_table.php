@@ -12,53 +12,53 @@ return new class extends Migration
     public function up(): void
     {
         /**
-         * DEFINICIÓN DE TABLAS PARA EL MÓDULO DE USUARIOS
-         * Esta migración crea las tablas necesarias para gestionar
-         * usuarios, empleados, sucursales, tipos de contratos y turnos.
+         * TABLE DEFINITIONS FOR THE USER MODULE
+         * This migration creates the necessary tables to manage
+         * users, employees, branches, contract types, and shifts.
          */
 
-        // FALTA: Crear tabla de roles y permisos
+        // TODO: Create roles and permissions table
 
-        Schema::create('sucursales', function (Blueprint $table) {
+        Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100);
-            $table->string('direccion')->nullable();
+            $table->string('name', 100);
+            $table->string('address')->nullable();
         });
 
-        Schema::create('tipo_contratos', function (Blueprint $table) {
+        Schema::create('contract_types', function (Blueprint $table) {
             $table->id();
-            $table->string('descripcion', 100);
-            $table->float('salario_base', 8, 2);
+            $table->string('description', 100);
+            $table->float('base_salary', 8, 2);
         });
 
-        Schema::create('turnos', function (Blueprint $table) {
+        Schema::create('shifts', function (Blueprint $table) {
             $table->id();
-            $table->string('descripcion', 100);
-            $table->time('hora_entrada');
-            $table->time('hora_salida');
+            $table->string('description', 100);
+            $table->time('entry_time');
+            $table->time('exit_time');
         });
 
-        Schema::create('empleados', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('nombres', 50);
-            $table->string('apellidos', 50);
+            $table->string('first_name', 50);
+            $table->string('last_name', 50);
             $table->string('dui', 20)->unique();
-            $table->string('direccion')->nullable();
-            $table->string('telefono', 15)->nullable();
-            $table->date('fecha_nacimiento')->nullable();
-            $table->string('genero', 10)->nullable();
-            $table->foreignId('sucursal_id')->constrained('sucursales')->onDelete('cascade');
-            $table->foreignId('tipo_contrato_id')->constrained('tipo_contratos')->onDelete('cascade');
-            $table->foreignId('turno_id')->constrained('turnos')->onDelete('cascade');
+            $table->string('address')->nullable();
+            $table->string('phone', 15)->nullable();
+            $table->date('birth_date')->nullable();
+            $table->string('gender', 10)->nullable();
+            $table->foreignId('branch_id')->constrained('branches')->onDelete('cascade');
+            $table->foreignId('contract_type_id')->constrained('contract_types')->onDelete('cascade');
+            $table->foreignId('shift_id')->constrained('shifts')->onDelete('cascade');
             $table->timestamps();
         });
 
-        Schema::create('usuarios', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string('contrasenia');
-            $table->foreign('empleado_id')->references('id')->on('empleados')->onDelete('cascade');
-            //----> FALTA EL ROL Y SUS PERMISOS <------
+            $table->string('password');
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            // TODO: Add role and permissions fields
             $table->rememberToken();
             $table->timestamps();
         });
@@ -77,104 +77,85 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
-
-        Schema::create('asistencias', function (Blueprint $table) {
+        Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('empleado_id')->constrained('empleados')->onDelete('cascade');
-            $table->date('fecha');
-            $table->time('hora_entrada');
-            $table->time('hora_salida');
-            $table->unique(['empleado_id', 'fecha'], 'unique_asistencia'); // Asegura que un empleado no tenga más de una asistencia por día
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->date('date');
+            $table->time('entry_time');
+            $table->time('exit_time');
+            $table->unique(['employee_id', 'date'], 'unique_attendance');
         });
 
-        Schema::create('horas_extras', function (Blueprint $table) {
+        Schema::create('overtimes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('empleado_id')->constrained('empleados')->onDelete('cascade');
-            $table->date('fecha');
-            $table->time('hora_inicio');
-            $table->time('hora_fin');
-            $table->decimal('monto', 8, 2); // Se calcula según el tipo de contrato y horas trabajadas
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->decimal('amount', 8, 2);
         });
 
-        Schema::create('bonos', function (Blueprint $table) {
+        Schema::create('bonuses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('empleado_id')->constrained('empleados')->onDelete('cascade');
-            $table->string('descripcion', 100);
-            $table->decimal('monto', 8, 2);
-            $table->date('fecha');
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->string('description', 100);
+            $table->decimal('amount', 8, 2);
+            $table->date('date');
         });
 
-        Schema::create('descuentos_por_perdidas', function (Blueprint $table) {
+        Schema::create('loss_deductions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('empleado_id')->constrained('empleados')->onDelete('cascade');
-            $table->string('descripcion', 100);
-            $table->decimal('monto', 8, 2);
-            $table->date('fecha');
-            $table->unique(['empleado_id', 'fecha', 'descripcion'], 'unique_descuento_perdida'); // Asegura que no se repita el descuento por la misma pérdida en la misma fecha
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->string('description', 100);
+            $table->decimal('amount', 8, 2);
+            $table->date('date');
+            $table->unique(['employee_id', 'date', 'description'], 'unique_loss_deduction');
         });
 
-        Schema::create('anticipos', function (Blueprint $table) {
+        Schema::create('advances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('empleado_id')->constrained('empleados')->onDelete('cascade');
-            $table->decimal('monto', 8, 2);
-            $table->date('fecha');
-            $table->string('descripcion', 100)->nullable();
-            $table->unique(['empleado_id', 'fecha'], 'unique_anticipo'); // Asegura que no se repita el anticipo para el mismo empleado en la misma fecha
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->decimal('amount', 8, 2);
+            $table->date('date');
+            $table->string('description', 100)->nullable();
+            $table->unique(['employee_id', 'date'], 'unique_advance');
         });
 
-        Schema::create('planillas', function (Blueprint $table) {
+        Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('empleado_id')->constrained('empleados')->onDelete('cascade');
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
-            /**
-             * Los campos siguientes son para almacenar los totales de la planilla
-             * y se calcularán automáticamente al generar la planilla, desde la información
-             * de asistencias, horas extras, bonos, descuentos y anticipos.
-             */
-            $table->decimal('total_horas_trabajadas', 8, 2)->default(0);
-            $table->decimal('total_horas_extras', 8, 2)->default(0);
-            $table->decimal('total_bonos', 8, 2)->default(0);
-            $table->decimal('total_descuentos', 8, 2)->default(0);
-            $table->decimal('total_anticipos', 8, 2)->default(0);
-            $table->decimal('salario_bruto', 8, 2)->default(0);
-            $table->decimal('salario_neto', 8, 2)->default(0);
-            $table->date('fecha_pago');
-            $table->unique(['empleado_id', 'fecha_inicio', 'fecha_fin'], 'unique_planilla'); // Asegura que no se repita la planilla para el mismo empleado en el mismo período
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->decimal('total_hours_worked', 8, 2)->default(0);
+            $table->decimal('total_overtime_hours', 8, 2)->default(0);
+            $table->decimal('total_bonuses', 8, 2)->default(0);
+            $table->decimal('total_deductions', 8, 2)->default(0);
+            $table->decimal('total_advances', 8, 2)->default(0);
+            $table->decimal('gross_salary', 8, 2)->default(0);
+            $table->decimal('net_salary', 8, 2)->default(0);
+            $table->date('payment_date');
+            $table->unique(['employee_id', 'start_date', 'end_date'], 'unique_payroll');
         });
 
-        // Tabla para gestionar las obligaciones tributarias como ISSS, AFP, Renta, etc.
-        Schema::create('obligaciones_tributarias', function (Blueprint $table) {
+        Schema::create('tax_obligations', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100);
-            $table->string('descripcion');
-            $table->decimal('porcentaje', 8, 2);
+            $table->string('name', 100);
+            $table->string('description');
+            $table->decimal('percentage', 8, 2);
         });
 
-        /**
-         * Tabla pivote para gestionar las relaciones entre planillas y obligaciones tributarias,
-         * permitiendo que una planilla pueda tener múltiples obligaciones tributarias
-         * y una obligación tributaria pueda aplicarse a múltiples planillas.
-         */
-        Schema::create('planilla_obligacion_tributaria', function (Blueprint $table) {
+        Schema::create('payroll_tax_obligation', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('planilla_id')->constrained('planillas')->onDelete('cascade');
-            $table->foreignId('obligacion_tributaria_id')->constrained('obligaciones_tributarias')->onDelete('cascade');
-            $table->decimal('monto', 8, 2);
-            $table->unique(['planilla_id', 'obligacion_tributaria_id'], 'unique_planilla_obligacion'); // Asegura que no se repita la obligación tributaria para la misma planilla
+            $table->foreignId('payroll_id')->constrained('payrolls')->onDelete('cascade');
+            $table->foreignId('tax_obligation_id')->constrained('tax_obligations')->onDelete('cascade');
+            $table->decimal('amount', 8, 2);
+            $table->unique(['payroll_id', 'tax_obligation_id'], 'unique_payroll_tax_obligation');
         });
 
-        /**
-         * Tabla para gestionar las fórmulas de cálculo de salarios,
-         * permitiendo definir fórmulas personalizadas para calcular salarios,
-         * horas extras, bonos, descuentos, etc.
-         * Esta tabla puede ser utilizada para almacenar fórmulas que se aplican
-         * a diferentes tipos de contratos o situaciones específicas o cambios en la legislación laboral.
-         */
         Schema::create('formulas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100);
-            $table->text('descripcion')->nullable();
+            $table->string('name', 100);
+            $table->text('description')->nullable();
             $table->text('formula');
         });
     }
@@ -185,26 +166,25 @@ return new class extends Migration
     public function down(): void
     {
         /**
-         * ELIMINACIÓN DE TABLAS
-         * Esta migración elimina las tablas creadas en la migración 'up'.
+         * TABLE DELETION
+         * This migration drops all the tables created in the 'up' method.
          */
         Schema::dropIfExists('formulas');
-        Schema::dropIfExists('planilla_obligacion_tributaria');
-        Schema::dropIfExists('obligaciones_tributarias');
-        Schema::dropIfExists('planillas');
-        Schema::dropIfExists('anticipos');
-        Schema::dropIfExists('descuentos_por_perdidas');
-        Schema::dropIfExists('bonos');
-        Schema::dropIfExists('horas_extras');
-        Schema::dropIfExists('asistencias');
+        Schema::dropIfExists('payroll_tax_obligation');
+        Schema::dropIfExists('tax_obligations');
+        Schema::dropIfExists('payrolls');
+        Schema::dropIfExists('advances');
+        Schema::dropIfExists('loss_deductions');
+        Schema::dropIfExists('bonuses');
+        Schema::dropIfExists('overtimes');
+        Schema::dropIfExists('attendances');
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('usuarios');
-        Schema::dropIfExists('empleados');
-        Schema::dropIfExists('turnos');
-        Schema::dropIfExists('tipo_contratos');
-        Schema::dropIfExists('sucursales');
-        // FALTA: Eliminar tablas de roles y permisos si se crean
-        // Nota: Asegurarse de eliminar las tablas en el orden correcto para evitar errores de clave foránea
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('employees');
+        Schema::dropIfExists('shifts');
+        Schema::dropIfExists('contract_types');
+        Schema::dropIfExists('branches');
+        // TODO: Drop roles and permissions tables if created
     }
 };
