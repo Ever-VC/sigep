@@ -9,4 +9,11 @@ class Advance extends Model
 {
     /** @use HasFactory<\Database\Factories\AdvanceFactory> */
     use HasFactory;
+
+    protected $fillable = ['employee_id', 'amount', 'date', 'description'];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

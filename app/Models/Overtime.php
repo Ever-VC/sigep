@@ -9,4 +9,11 @@ class Overtime extends Model
 {
     /** @use HasFactory<\Database\Factories\OvertimeFactory> */
     use HasFactory;
+
+    protected $fillable = ['employee_id', 'date', 'start_time', 'end_time', 'amount'];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

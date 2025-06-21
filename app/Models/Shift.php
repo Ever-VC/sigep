@@ -9,4 +9,11 @@ class Shift extends Model
 {
     /** @use HasFactory<\Database\Factories\ShiftFactory> */
     use HasFactory;
+
+    protected $fillable = ['description', 'entry_time', 'exit_time'];
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }

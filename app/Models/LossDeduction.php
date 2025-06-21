@@ -9,4 +9,11 @@ class LossDeduction extends Model
 {
     /** @use HasFactory<\Database\Factories\LossDeductionFactory> */
     use HasFactory;
+
+    protected $fillable = ['employee_id', 'description', 'amount', 'date'];
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
 }

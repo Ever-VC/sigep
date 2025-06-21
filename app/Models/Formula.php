@@ -9,4 +9,6 @@ class Formula extends Model
 {
     /** @use HasFactory<\Database\Factories\FormulaFactory> */
     use HasFactory;
+
+    protected $fillable = ['name', 'description', 'formula'];
 }

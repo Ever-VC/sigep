@@ -9,4 +9,11 @@ class ContractType extends Model
 {
     /** @use HasFactory<\Database\Factories\ContractTypeFactory> */
     use HasFactory;
+
+    protected $fillable = ['description', 'base_salary'];
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }
