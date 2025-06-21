@@ -23,12 +23,14 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('address')->nullable();
+            $table->timestamps();
         });
 
         Schema::create('contract_types', function (Blueprint $table) {
             $table->id();
             $table->string('description', 100);
             $table->float('base_salary', 8, 2);
+            $table->timestamps();
         });
 
         Schema::create('shifts', function (Blueprint $table) {
@@ -36,6 +38,7 @@ return new class extends Migration
             $table->string('description', 100);
             $table->time('entry_time');
             $table->time('exit_time');
+            $table->timestamps();
         });
 
         Schema::create('employees', function (Blueprint $table) {
@@ -76,6 +79,7 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+            $table->timestamps();
         });
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
@@ -84,6 +88,7 @@ return new class extends Migration
             $table->time('entry_time');
             $table->time('exit_time');
             $table->unique(['employee_id', 'date'], 'unique_attendance');
+            $table->timestamps();
         });
 
         Schema::create('overtimes', function (Blueprint $table) {
@@ -93,6 +98,7 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->decimal('amount', 8, 2);
+            $table->timestamps();
         });
 
         Schema::create('bonuses', function (Blueprint $table) {
@@ -101,6 +107,7 @@ return new class extends Migration
             $table->string('description', 100);
             $table->decimal('amount', 8, 2);
             $table->date('date');
+            $table->timestamps();
         });
 
         Schema::create('loss_deductions', function (Blueprint $table) {
@@ -110,6 +117,7 @@ return new class extends Migration
             $table->decimal('amount', 8, 2);
             $table->date('date');
             $table->unique(['employee_id', 'date', 'description'], 'unique_loss_deduction');
+            $table->timestamps();
         });
 
         Schema::create('advances', function (Blueprint $table) {
@@ -119,6 +127,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('description', 100)->nullable();
             $table->unique(['employee_id', 'date'], 'unique_advance');
+            $table->timestamps();
         });
 
         Schema::create('payrolls', function (Blueprint $table) {
@@ -135,6 +144,7 @@ return new class extends Migration
             $table->decimal('net_salary', 8, 2)->default(0);
             $table->date('payment_date');
             $table->unique(['employee_id', 'start_date', 'end_date'], 'unique_payroll');
+            $table->timestamps();
         });
 
         Schema::create('tax_obligations', function (Blueprint $table) {
@@ -142,6 +152,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('description');
             $table->decimal('percentage', 8, 2);
+            $table->timestamps();
         });
 
         Schema::create('payroll_tax_obligation', function (Blueprint $table) {
@@ -150,6 +161,7 @@ return new class extends Migration
             $table->foreignId('tax_obligation_id')->constrained('tax_obligations')->onDelete('cascade');
             $table->decimal('amount', 8, 2);
             $table->unique(['payroll_id', 'tax_obligation_id'], 'unique_payroll_tax_obligation');
+            $table->timestamps();
         });
 
         Schema::create('formulas', function (Blueprint $table) {
@@ -157,6 +169,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->text('formula');
+            $table->timestamps();
         });
     }
 

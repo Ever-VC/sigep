@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'employee_id',
     ];
 
     /**
@@ -46,5 +47,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the employee associated with the user.
+     */
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
     }
 }
