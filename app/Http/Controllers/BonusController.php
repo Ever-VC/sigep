@@ -56,7 +56,8 @@ class BonusController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $bonus = Bonus::findOrFail($id);
+        return view('bonuses.edit', compact('bonus'));
     }
 
     /**
@@ -64,7 +65,21 @@ class BonusController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $bonus = Bonus::findOrFail($id);
+
+        $request->validate([
+            'description' => 'required|string',
+            'amount' => 'required|numeric',
+            'date' => 'required|date',
+        ]);
+
+        $bonus->description = $request->description;
+        $bonus->amount = $request->amount;
+        $bonus->date = $request->date;
+        $bonus->save();
+
+    return redirect()->route('employees.index')
+                    ->with('message', 'Bono actualizado correctamente.');
     }
 
     /**
@@ -72,6 +87,10 @@ class BonusController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $bonus = Bonus::findOrFail($id);
+        $bonus->delete();
+
+        return redirect()->route('employees.index')
+                        ->with('message', 'Bono eliminado correctamente.');
     }
 }

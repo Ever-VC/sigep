@@ -9,13 +9,13 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::all();
-        return view('employees.index', compact('employees'));
+    $employees = Employee::with(['branch', 'contractType', 'shift', 'bonuses'])->get();
+    return view('employees.index', compact('employees'));
     }
 
     public function create()
     {
-        return view('employees.create');
+    return view('employees.create');
     }
 
     public function store(Request $request)
