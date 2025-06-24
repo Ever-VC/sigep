@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BonusController;
 use App\Livewire\Employees\EditEmployee;
+use App\Livewire\Auth\ForgotPassword;
+use App\Livewire\Auth\ResetPassword;
 use App\Models\Employee; 
 use Livewire\Livewire;
 
@@ -65,3 +67,15 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/employees/{employee}/edit', function (Employee $employee) {
     return view('employees.edit', compact('employee'));
 })->name('employees.edit');
+
+//Contraseña
+
+Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
+Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
+Route::get('/probar-correo', function () {
+    Mail::raw('Este es un correo de prueba desde Laravel.', function ($message) {
+        $message->to('tu_correo@gmail.com')
+        ->subject('Correo de prueba SIGEP');
+    });
+    return 'Correo enviado';
+});
