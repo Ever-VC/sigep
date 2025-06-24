@@ -103,36 +103,4 @@
             @endif
         </div>
     </form>
-
-    <h3 class="text-xl font-bold mb-4">Listado de empleados</h3>
-
-    <table class="min-w-full bg-white border rounded overflow-hidden">
-        <thead class="bg-gray-200 text-gray-600 text-sm">
-            <tr>
-                <th class="px-4 py-2">Nombre</th>
-                <th class="px-4 py-2">DUI</th>
-                <th class="px-4 py-2">Sucursal</th>
-                <th class="px-4 py-2">Contrato</th>
-                <th class="px-4 py-2">Turno</th>
-                <th class="px-4 py-2">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($employees as $employee)
-                <tr class="border-t">
-                    <td class="px-4 py-2">{{ $employee->first_name }} {{ $employee->last_name }}</td>
-                    <td class="px-4 py-2">{{ $employee->dui }}</td>
-                    <td class="px-4 py-2">{{ $employee->branch->name }}</td>
-                    <td class="px-4 py-2">{{ $employee->contractType->description }}</td>
-                    <td class="px-4 py-2">{{ $employee->shift->description }}</td>
-                    <td class="px-4 py-2 space-x-2">
-                        <button wire:click="edit({{ $employee->id }})" class="text-blue-600 hover:underline text-sm">Editar</button>
-                        <button wire:click="delete({{ $employee->id }})" class="text-red-600 hover:underline text-sm">Eliminar</button>
-                    </td>
-                </tr>
-            @empty
-                <tr><td colspan="6" class="text-center py-4 text-gray-500">No hay empleados registrados.</td></tr>
-            @endforelse
-        </tbody>
-    </table>
 </div>

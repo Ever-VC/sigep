@@ -12,6 +12,7 @@ use Livewire\WithPagination;
 class ManageEmployees extends Component
 {
    // Inputs del formulario
+    public $modoCreacion = false;
     public $first_name, $last_name, $dui, $phone, $address;
     public $birth_date, $gender, $branch_id, $contract_type_id, $shift_id;
 
@@ -45,7 +46,9 @@ class ManageEmployees extends Component
         $this->contractTypes = ContractType::all();
         $this->shifts = Shift::all();
 
+            if (!$this->modoCreacion) {
         $this->loadEmployees();
+    }
     }
 
     public function loadEmployees()
@@ -55,7 +58,7 @@ class ManageEmployees extends Component
 
     public function render()
     {
-        return view('livewire.employees.manage-employees');
+    return view('livewire.employees.manage-employees');
     }
 
     public function store()
