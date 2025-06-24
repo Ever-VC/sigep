@@ -6,6 +6,9 @@ use App\Livewire\Branches;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BonusController;
+use App\Livewire\Employees\EditEmployee;
+use App\Models\Employee; 
+use Livewire\Livewire;
 
 Route::get('/', function () {
     return view('principal');
@@ -17,7 +20,9 @@ Route::post('/login', [LoginController::class, 'store']);
 
 Route::post('/logout', [LogoutController::class, 'store'])->name('logout');
 Route::resource('employees', EmployeeController::class);
-
+Route::get('/employees/{employee}/edit-live', EditEmployee::class)->name('employees.edit-live');
+Livewire::component('employees.edit-employee', EditEmployee::class);
+Route::get('/employees/{employee}/edit-live', EditEmployee::class)->name('employees.edit-live');
 Route::get('/bonuses/create', [BonusController::class, 'create'])->name('bonuses.create.simple');
 Route::get('/bonuses/create/{employee}', [BonusController::class, 'create'])->name('bonuses.create');
 Route::post('/bonuses', [BonusController::class, 'store'])->name('bonuses.store');
@@ -25,6 +30,7 @@ Route::get('/bonuses/{bonus}', [BonusController::class, 'show'])->name('bonuses.
 Route::get('/bonuses/{bonus}/edit', [BonusController::class, 'edit'])->name('bonuses.edit');
 Route::put('/bonuses/{bonus}', [BonusController::class, 'update'])->name('bonuses.update');
 Route::delete('/bonuses/{bonus}', [BonusController::class, 'destroy'])->name('bonuses.destroy');
+Route::get('/employees/{employee}/edit-live', EditEmployee::class)->name('employees.edit-live');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -55,3 +61,7 @@ Route::middleware(['auth'])->group(function () {
         return view('employees.index');
     })->name('employees.index');
 });
+
+Route::get('/employees/{employee}/edit', function (Employee $employee) {
+    return view('employees.edit', compact('employee'));
+})->name('employees.edit');
