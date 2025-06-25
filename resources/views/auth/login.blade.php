@@ -1,14 +1,11 @@
 @extends('layouts.app')
 
 @section('titulo')
-    Inicia Sesión en SIGEP
+    Inicio de Sesión - SIGEP
 @endsection
 
 @section('contenido')
     <div class="md:flex md:justify-center md:gap-10 md:items-center">
-        <div class="md:w-6/12 p-5">
-            Imagen
-        </div>
         <div class="md:w-4/12 bg-white p-6 rounded-lg shadow-xl">
             <form method="POST" action="{{ route('login') }}" novalidate>
                 @csrf
@@ -58,14 +55,15 @@
                     <input type="checkbox" name="remember"> <label class="text-gray-500 text-sm" for="remember"> Recordar mis credenciales</label>
                 </div>
                 <div class="mb-5 text-right">
-                    <a href="{{ route('password.request') }}" class="text-sm text-sky-600 hover:underline">
+                    <a href="{{ route('password.request') }}" class="text-sm text-verde-sigep hover:underline">
                         ¿Olvidaste tu contraseña?
                     </a>
+
                 </div>
                 <input
                     type="submit"
                     value="Iniciar Sesión"
-                    class="bg-sky-600 hover:bg-sky-700 transition-colors cursor-pointer uppercase font-bold w-full p-3 text-white rounded-lg"
+                    class="bg-verde-sigep hover:bg-verde-sigep-hover transition-colors cursor-pointer uppercase font-bold w-full p-3 text-white rounded-lg"
                 >
             </form>
         </div>

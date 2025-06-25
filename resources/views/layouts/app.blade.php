@@ -12,11 +12,14 @@
 <body class="bg-gray-100">
     <header class="p-5 bg-white shadow">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-3xl font-black text-green-700">Ferretería El Roble</a>
+            <a href="/" class="flex items-center space-x-3">
+                <img src="{{ asset('images/logo roble.png') }}" alt="Logo El Roble" class="h-10 w-auto">
+                <span class="text-3xl font-black text-green-700">Ferretería El Roble</span>
+            </a>
             @auth
                 <nav class="flex items-center gap-4">
                     <span class="text-sm text-gray-600">
-                        Hola, 
+                        Hola,
                         <a href="{{ route('profile.show') }}" class="font-semibold text-gray-700 hover:underline">
                             {{ auth()->user()->employee->first_name ?? auth()->user()->email }}
                         </a>
