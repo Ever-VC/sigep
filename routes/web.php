@@ -11,6 +11,7 @@ use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\ResetPassword;
 use App\Models\Employee; 
 use Livewire\Livewire;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('principal');
@@ -79,3 +80,5 @@ Route::get('/probar-correo', function () {
     });
     return 'Correo enviado';
 });
+//Perfil de empleado
+Route::middleware('auth')->get('/mi-perfil', [ProfileController::class, 'show'])->name('profile.show');
