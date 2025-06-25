@@ -12,6 +12,9 @@ use App\Livewire\Auth\ResetPassword;
 use App\Models\Employee; 
 use Livewire\Livewire;
 use App\Http\Controllers\ProfileController;
+//para mientras
+use Illuminate\Support\Facades\Mail;
+
 
 Route::get('/', function () {
     return view('principal');
